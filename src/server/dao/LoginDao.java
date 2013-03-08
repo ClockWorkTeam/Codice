@@ -25,14 +25,14 @@ import server.shared.*;
 public interface LoginDao{
  /**
    * Metodo che prova il login
-   * @param l Oggetto Login da cui si prendono le informazioni
+   * @param user Oggetto User da cui si prendono username e password necessari per il login
    * @return un boolean che indica se il login e` avvenuto con successo o no
    */    
   public boolean login(User user);
 
  /** Metodo che effettua il logout
    * 
-   * @param l Oggetto Login da cui si prendono le informazioni
+   * @param user Oggetto User dell'utente che vuole disconnettersi
    * @return un boolean che indica se il logout e` avvenuto con successo o no
    */    
   public boolean logout(User user);
