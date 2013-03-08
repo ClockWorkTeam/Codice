@@ -74,7 +74,14 @@ public void finalize(){
     return rs;
   }
 
- public boolean executeUpdate(String query){
+  /**
+   * Metodo che ritorna una tupla
+   * 
+   * @param query Stringa da eseguire sul database
+   * @return booleano che rappresenta il successo o il fallimento dell'operazione
+   * 
+   */  
+   public boolean executeUpdate(String query){
 	try{
 		statement.executeUpdate(query);
 	}
