@@ -25,6 +25,7 @@ import static org.junit.Assert.*;
 import java.util.Date;
 
 import org.junit.Test;
+import java.util.Vector;
 
 public class UserTest {
 	User user;
@@ -56,23 +57,38 @@ public class UserTest {
  * Test sui messaggi
  */
 	RecordMessage rm;
+	RecordMessage rm2;
+	Vector<RecordMessage> rms;
 	
-	private void init(){
+	
+	private void initOne(){
 		rm= new RecordMessage("Liquid90","Pardis","ciao", new Date(2013-01-01));
+	}
+	
+	private void initMore(){
+		rms= new Vector<RecordMessage>();
+		rm= new RecordMessage("Liquid90","Pardis","ciao", new Date(2013-01-01));
+		rms.add(rm);
+		rm2= new RecordMessage("Ago","Pardis","ciao2", new Date(2013-01-01));
+		rms.add(rm2);		
 	}
 
 	@Test
 	public void testMessage(){
 		initTot(); //inizializzo user
-		init(); //inizializzo messaggio
+		initOne(); //inizializzo messaggio
 		user.setMessage(rm);
 		assertTrue("Il messaggio non è stato inserito", user.isUserMessage(rm));
 	}
 	
 	@Test
 	public void testMessages(){
-		testMessage();
-		
+		initTot();
+		initMore();
+		user.setMessages(rms);
+		assertTrue("Il messaggio non è stato inserito", user.isUserMessage(rm));
+		user.removeMessage(rm);
+		assertFalse("Il messaggio non è stato eliminato", user.isUserMessage(rm));
 	}
 	
 }
