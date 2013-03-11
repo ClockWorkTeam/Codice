@@ -30,27 +30,16 @@ import java.util.Vector;
 public class UserTest {
 	User user;
 
-	private void initLogin(){
-		user= new User("Leo","par2409","0.0.10.0");	
-	}
-	
 	private void initTot(){
-		user= new User("Liquid90","ciao","Giacomo","Bain","0.0.10.10");
+		user= new User("Liquid90","Giacomo","Bain","0.0.10.10");
 	}
 	
-	@Test
-	public void testCostruttoreLogin() {
-		initLogin();
-		assertTrue("Username non è quello atteso", user.getUsername() == "Leo");
-		assertTrue("Password non è quello atteso", user.getPassword() == "par2409");
-		assertTrue("IP non è quello atteso", user.getIP() == "0.0.10.0");
-	}
-
 	@Test
 	public void testCostruttoreTot() {
 		initTot();
 		assertTrue("Username non è quello atteso", user.getUsername() == "Liquid90");
-		assertTrue("Password non è quello atteso", user.getPassword() == "ciao");
+		assertTrue("Nome non è quello atteso", user.getName() == "Giacomo");
+		assertTrue("Cognome non è quello atteso", user.getSurname() == "Bain");
 		assertTrue("IP non è quello atteso", user.getIP() == "0.0.10.10");
 	}
 /**
