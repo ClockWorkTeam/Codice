@@ -19,7 +19,7 @@ package server.shared;
 import java.util.Vector;
 
 public class UserList {
-	Vector<User> users;
+	private Vector<User> users;
 
 	public UserList(){
 		users=new Vector<User>();
