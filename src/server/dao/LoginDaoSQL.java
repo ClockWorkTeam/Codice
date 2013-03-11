@@ -39,7 +39,7 @@ public class LoginDaoSQL implements LoginDao{
   }
 
   /**
-   * Metodo che prova il login
+   * Metodo che effettua il login
    * @param username Username inserito dall'utente per accedere
    * @param password Password inserita dall'utente per accedere
    * @param IP della connessione del computer dell'utente
