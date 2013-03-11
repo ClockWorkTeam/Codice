@@ -19,25 +19,11 @@ package server.shared;
 import java.util.Vector;
 public class User {
   private String username;
-  private String password;
   private String name;
   private String surname;
   private String IP;
   private Vector<RecordMessage> messages;
 
-  /**Costruttore di User per effettuare il login 
-   * @param username Stringa dell'username dato alla login
-   * @param password Stringa della password data alla login
-   * @param IP Stringa dell'IP del client che sta effettuando la login
-   */     
-  public User(String username, String password, String IP){
-    this.username=username;
-	this.password=password;
-	this.name="";
-	this.surname="";
-	this.IP=IP;
-	this.messages= new Vector<RecordMessage>();
-  }
 	
   /**Costruttore di User con tutti i parametri (tranne messaggi)
    * @param username
@@ -46,9 +32,8 @@ public class User {
    * @param surname
    * @param IP
    */
-  public User(String username, String password, String name, String surname, String IP){
+  public User(String username, String name, String surname, String IP){
     this.username=username;
-	this.password=password;
 	this.name=name;
 	this.surname=surname;
 	this.IP=IP;
@@ -62,12 +47,6 @@ public class User {
     return this.username;
   }
   
-  /**Metodo che restituisce la password
-   * @return
-   */
-  public String getPassword(){
-    return this.password;
-  }
 
   public String getName(){
 		return this.name;
@@ -80,12 +59,6 @@ public class User {
 	}
 
 //metodi set	
-	/**
-	 * @param password
-	 */
-	public void setPassword(String password){
-		this.password=password;
-	}
 	
 	/**
 	 * @param name
