@@ -68,6 +68,8 @@ public class UserTest {
 		initOne(); //inizializzo messaggio
 		user.setMessage(rm);
 		assertTrue("Il messaggio non è stato inserito", user.isUserMessage(rm));
+		initOne();
+		assertFalse("Il messaggio non dovrebbe essere dell'utente", user.isUserMessage(rm));
 	}
 	
 	@Test
