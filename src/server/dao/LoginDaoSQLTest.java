@@ -22,7 +22,7 @@ public class LoginDaoSQLTest {
 		init();
 		connection.executeUpdate("INSERT INTO UserDataSQL VALUES ('Leo','par2409','','','0');");
 		User user=new User("Leo","","","0.0.10.0");
-		users.addUser(user);
+		assertTrue("Utente non aggiunto",users.addUser(user));
 	}
 		
 	@Test
