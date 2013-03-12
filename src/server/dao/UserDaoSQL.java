@@ -13,7 +13,7 @@
 * |         |               |                          |
 * +---------+---------------+--------------------------+
 *
-*/ 
+*/
 
 package server.dao;
 import server.shared.*;
@@ -26,6 +26,7 @@ public class UserDaoSQL implements UserDao{
 		this.connection=connection;
 		this.users=users;
 	}
+
 	
 	/**Metodo che registra un'utente nel DB 
 	 * @param username
@@ -47,8 +48,8 @@ public class UserDaoSQL implements UserDao{
 	     }
 	     return user;
 	}
-
-	/**Metodo che registra un'utente nel DB 
+	    
+	/**Metodo che elimina un'utente nel DB 
 	 * @param username
 	 * @return l'oggetto User se l'operazione ha buon fine, altrimenti null
 	 */     
@@ -56,10 +57,10 @@ public class UserDaoSQL implements UserDao{
 		boolean done = connection.executeUpdate("DELETE FROM UserDataSQL WHERE username='"+username+"';");
 		 if(done){
 			 done= users.removeUser(username);
-		 }		
-		return done;
+		 }
+		 return done;
 	}
-	
+		 
   /**Metodo che setta il campo password di un User nel DB
    * @param username dell'utente che vuole eseguire l'operazione
    * @param oldpassword password da modificare
@@ -72,7 +73,7 @@ public class UserDaoSQL implements UserDao{
 	}
 
   /**Metodo che setta il campo name di un User
-   * @param user Oggetto User da cui si prendono le informazioni
+  * @param username Stringa dell'utente da cui si prendono le informazioni
    * @param name la stringa del nuovo name del User
    * @return boolean che indica se l'operazione e' andata o meno a buon fine
    */   
@@ -85,7 +86,7 @@ public class UserDaoSQL implements UserDao{
 	}
 
   /**Metodo che setta il campo surname di un User
-   * @param user Oggetto User da cui si prendono le informazioni
+   * @param username Stringa dell'utente da cui si prendono le informazioni
    * @param surname la stringa del nuovo surname del User
    * @return boolean che indica se l'operazione e' andata o meno a buon fine
    */   
@@ -96,6 +97,6 @@ public class UserDaoSQL implements UserDao{
     	if(done){
     		user.setSurname(surname);
     	}
-		return done;	
+		return done;
 	}
 }
