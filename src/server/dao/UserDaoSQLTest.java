@@ -18,13 +18,35 @@ public class UserDaoSQLTest {
 	}
 	
 	@Test
-	public void test() {
+	public void testRec() {
 		init();
-		User user=userDao.recordUser("Leo", "par1368", "Pardis", "Zohouri", "0.0.0.1");
+		User user=userDao.recordUser("Leo", "1234", "Pardis", "Zohouri", "0.0.0.1");
 		assertTrue("Creazione utente fallito",(user.getUsername()).equals("Leo"));
 		assertTrue("Utente non presente", (users.getUser(user.getUsername()))!=null);
-		
-		assertTrue("Rimozione utente fallita",userDao.removeUser(user.getUsername()));
+	} 
+	
+	@Test
+	public void testPass(){
+		testRec();
+		assertFalse("Errore cambio password", userDao.setPassword("Liquid", "ciaociao"));
+		assertTrue("Errore cambio password", userDao.setPassword("Leo","ciaociao"));
+		assertTrue("Rimozione utente fallita",userDao.removeUser("Leo"));
+	}
+	
+	@Test
+	public void testName(){
+		testRec();
+		assertFalse("Errore cambio password", userDao.setName("Liquid", "ciaociao"));
+		assertTrue("Errore cambio password", userDao.setName("Leo","ciaociao"));
+		assertTrue("Rimozione utente fallita",userDao.removeUser("Leo"));
+	}
+
+	@Test
+	public void testSurname(){
+		testRec();
+		assertFalse("Errore cambio password", userDao.setSurname("Liquid", "ciaociao"));
+		assertTrue("Errore cambio password", userDao.setSurname("Leo","ciaociao"));
+		assertTrue("Rimozione utente fallita",userDao.removeUser("Leo"));
 	}
 
 }

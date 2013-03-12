@@ -67,8 +67,10 @@ public class UserDaoSQL implements UserDao{
    * @param password la stringa della nuova password del User
    * @return boolean che indica se l'operazione e' andata o meno a buon fine
    */   
-	public boolean setPassword(String username, String oldpassword, String password){
-		boolean done = connection.executeUpdate("UPDATE UserDataSQL SET password='"+password+"' WHERE username='"+username+"' AND (password='"+oldpassword+"');");
+	public boolean setPassword(String username, String password){
+		User user=users.getUser(username);
+		if(user==null){return false;}
+		boolean done = connection.executeUpdate("UPDATE UserDataSQL SET password='"+password+"' WHERE username='"+username+"';");
 		return done;
 	}
 
@@ -80,7 +82,7 @@ public class UserDaoSQL implements UserDao{
 	public boolean setName(String username, String name){
 		User user=users.getUser(username);
 		if(user==null){return false;}
-		boolean done = connection.executeUpdate("UPDATE UserDataSQL SET name='"+name+"'' WHERE username='"+username+"';");
+		boolean done = connection.executeUpdate("UPDATE UserDataSQL SET name='"+name+"' WHERE username='"+username+"';");
     	if(done){ user.setName(name); }
 		return done;	
 	}
@@ -93,7 +95,7 @@ public class UserDaoSQL implements UserDao{
 	public boolean setSurname(String username, String surname){
 		User user=users.getUser(username);
 		if(user==null){return false;}
-		boolean done = connection.executeUpdate("UPDATE UserDataSQL SET surname='"+surname+"'' WHERE username='"+username+"';");
+		boolean done = connection.executeUpdate("UPDATE UserDataSQL SET surname='"+surname+"' WHERE username='"+username+"';");
     	if(done){
     		user.setSurname(surname);
     	}

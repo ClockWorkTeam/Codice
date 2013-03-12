@@ -43,7 +43,7 @@ public interface UserDao{
    * @param password la stringa della nuova password del User
    * @return boolean che indica se l'operazione e' andata o meno a buon fine
    */   
-	public boolean setPassword(String username, String oldpassword, String password);
+	public boolean setPassword(String username, String password);
 
   /**Metodo che setta il campo name di un User
    * @param user Oggetto User da cui si prendono le informazioni
