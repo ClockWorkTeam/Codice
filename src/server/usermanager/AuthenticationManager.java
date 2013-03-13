@@ -17,7 +17,7 @@
 
 package server.usermanager;
 import server.dao.*;
-import server.shared.*;
+import server.shared.User;
 
 /**
  * Classe che si occupa di gestire i login nel sistema
@@ -27,38 +27,62 @@ import server.shared.*;
  */
 
 public class AuthenticationManager{
-  private LoginDao access;
-  private UserDataDao infoUser;
-  private RecordMessageDao mexUser; 
+  private RecordMessageDao messages;
+  private LoginDao loginDao;
+  private UserDao userDao;
 
-  /* Costruttore con parametri della classe AuthenticationManager
-   * @param access riferimento alla classe che implementa l'interfaccia DAOLogin
+  
+  /** Costruttore con parametri della classe AuthenticationManager
+   * @param connection riferimento alla classe che si occupa della connessione con il db
+   * @param users lista degli utenti presenti
+   * @param messages lista dei mex presenti
+   * @param loginDao riferimento alla classe che implementa l'interfaccia LoginDao
+   * @param userDaoriferimento alla classe che implementa l'interfaccia UserDao
    */
-  public AuthenticationManager(LoginDao access, UserDataDao infoUser){
-		this.access = access;
-		this.infoUser = infoUser;
+  public AuthenticationManager(RecordMessageDao messages, LoginDao loginDao, UserDao userDao){
+	  this.messages=messages;
+	  this.loginDao=loginDao;
+	  this.userDao=userDao;
   }
    
-  /* Metodo per il login, se effettua i login setta anche i valori del User
-   * @param user oggetto contenente i dati di login inseriti dall'utente e l'IP
-   * @return esito operazione di login
+  /** Metodo per il login, se ha buon esito carica anche i messaggi dell'utente
+   * @param username username dell'utente che si sta autenticando 
+   * @param password
+   * @param IP
+   * @return user esito operazione di login
    */
-  public boolean login(User user){
-	  boolean result = access.login(user);
-	  if(result){	   
-	  	infoUser.getInfo(user);
-	  	checkMessages(user);
+  public User login(String username, String password, String IP){
+	  User user = loginDao.login(username, password, IP);
+	  if(user!=null){	   
+	  	messages.getMessages(user.getUsername());
 	  }
-	  return result; 
+	  return user; 
   }
    
-  public void checkMessages(User user){
-  	infoUser.getMessages(user, mexUser.getMessages(user));
-  }
-  /* Metodo per segnalare al sistema il logout di un dipendente
+  /** Metodo per segnalare al sistema il logout di un dipendente
    * @param user user del dipendente che ha effettuato il logout
    */
-  public void logout(User user){
-		access.logout(user);
-  }  
+  public boolean logout(User user){
+		return loginDao.logout(user);
+  }
+  
+	/**Metodo che invoca il metodo di UserDao per creare un nuovo user
+	 * @param username
+	 * @param password
+	 * @param name
+	 * @param surname
+	 * @param IP
+	 * @return l'oggetto User se l'operazione ha buon fine, altrimenti null
+	 */     
+	public User createUser(String username, String password, String name, String surname, String IP){
+		return userDao.createUser(username, password, name, surname, IP);
+	}
+
+	/**Metodo che invoca il metodo di UserDao per eliminare uno user
+	 * @param username
+	 * @return boolean operazione ha avuto buon esito o no
+	 */	
+	public boolean removeUser(String username){
+		return userDao.removeUser(username);
+	}
 }
