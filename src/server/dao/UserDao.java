@@ -29,7 +29,7 @@ public interface UserDao{
 	 * @param IP
 	 * @return l'oggetto User se l'operazione ha buon fine, altrimenti null
 	 */     
-	public User recordUser(String username, String password, String name, String surname, String IP);
+	public User createUser(String username, String password, String name, String surname, String IP);
 	
 	/**Metodo che registra un'utente nel DB 
 	 * @param username

@@ -20,7 +20,7 @@ public class UserDaoSQLTest {
 	@Test
 	public void testRec() {
 		init();
-		User user=userDao.recordUser("Leo", "1234", "Pardis", "Zohouri", "0.0.0.1");
+		User user=userDao.createUser("Leo", "1234", "Pardis", "Zohouri", "0.0.0.1");
 		assertTrue("Creazione utente fallito",(user.getUsername()).equals("Leo"));
 		assertTrue("Utente non presente", (users.getUser(user.getUsername()))!=null);
 	} 
