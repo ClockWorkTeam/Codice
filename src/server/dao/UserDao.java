@@ -39,7 +39,6 @@ public interface UserDao{
 	
   /**Metodo che setta il campo password di un User nel DB
    * @param username dell'utente che vuole eseguire l'operazione
-   * @param oldpassword password da modificare
    * @param password la stringa della nuova password del User
    * @return boolean che indica se l'operazione e' andata o meno a buon fine
    */   
