@@ -43,7 +43,7 @@ public class UserDaoSQL implements UserDao{
 				 users.removeUser(user.getUsername());
 				 user=null;
 			 }
-		 }
+		 }else{user=null;}
 	     return user;
 	}
 	    
