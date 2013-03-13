@@ -37,15 +37,13 @@ public class UserDaoSQL implements UserDao{
 	 * @return l'oggetto User se l'operazione ha buon fine, altrimenti null
 	 */     
 	public User createUser(String username, String password, String name, String surname, String IP){
-		 User user = new User(username, name, surname, IP);
-		 boolean done = users.addUser(user);
-		 if(done){
-			 done =	connection.executeUpdate("INSERT INTO UserDataSQL VALUES ('"+username+"','"+password+"','"+name+"','"+surname+"','"+IP+"');"); 
+		 User user = new User(username, name, surname, IP); 
+		 if(users.addUser(user)){
+			 if(!connection.executeUpdate("INSERT INTO UserDataSQL VALUES ('"+username+"','"+password+"','"+name+"','"+surname+"','"+IP+"');")){ 
+				 users.removeUser(user.getUsername());
+				 user=null;
+			 }
 		 }
-	     if(!done){
-	    	 users.removeUser(user.getUsername());
-	    	 user=null;
-	     }
 	     return user;
 	}
 	    
