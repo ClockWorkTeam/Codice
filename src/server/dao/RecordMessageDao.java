@@ -18,6 +18,7 @@
 package server.dao;
 import server.shared.*;
 import java.util.Vector;
+import java.util.Date;
 /**
  * Interfaccia che contiene i prototipi dei metodi per gestire i recordmessages
  * 
@@ -26,20 +27,23 @@ import java.util.Vector;
 public interface RecordMessageDao{
  /**
    * Metodo che trova i messaggi inviati all'user
-   * @param user Oggetto User ricevente dei messagi
+   * @param username dello user ricevente dei messagi
    * @return vettore dei messaggi inviati all'user
    */    
-  public Vector<RecordMessage> getMessages(User user);
+  public Vector<RecordMessage> getMessages(String username);
 
-  /* Metodo che inserisce un dato messaggio
-   * @param message Oggetto RecordMessage da inserire
-   * @return un boolean che indica se l'operazione ha avuto successo o no
+  /** Metodo che inserisce un dato messaggio
+   * @param sender
+   * @param addressee
+   * @param path
+   * @param date
+   * @return RecordMessage creato, o null se l'operazione non ha avuto buon esito
    */    
-  public boolean createMessage(RecordMessage message, User addressee);
+  public RecordMessage createMessage(String sender, String addressee, String path, Date date);
 
   /* Metodo che elimina un dato messaggio
    * @param message Oggetto RecordMessage da eliminare
    * @return un boolean che indica se l'operazione ha avuto successo o no
    */    
-  public boolean removeMessage(RecordMessage message, User addressee);  
+  public boolean removeMessage(RecordMessage message);  
 }
