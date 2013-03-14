@@ -24,8 +24,8 @@ public class RecordMessageDaoSQLTest {
 	@Test
 	public void testCreate() {
 		init();
-		User user1 =users.recordUser("Liquid90", "ciao", "Giacomo", "Bain", "0.0.0.2");
-		User user2=users.recordUser("Leo", "ciaociao", "Pardis", "ZH", "0.0.1.2");
+		User user1 =users.createUser("Liquid90", "ciao", "Giacomo", "Bain", "0.0.0.2");
+		User user2=users.createUser("Leo", "ciaociao", "Pardis", "ZH", "0.0.1.2");
 		
 		RecordMessage mex = rec.createMessage(user1.getUsername(), user2.getUsername(), "ciao", new Date(2013-3-12));
 		
@@ -39,8 +39,8 @@ public class RecordMessageDaoSQLTest {
 	@Test
 	public void testGetMex() {
 		init();
-		User user1 =users.recordUser("Liquid90", "ciao", "Giacomo", "Bain", "0.0.0.2");
-		User user2=users.recordUser("Leo", "ciaociao", "Pardis", "ZH", "0.0.1.2");
+		User user1 =users.createUser("Liquid90", "ciao", "Giacomo", "Bain", "0.0.0.2");
+		User user2=users.createUser("Leo", "ciaociao", "Pardis", "ZH", "0.0.1.2");
 		
 		rec.createMessage(user1.getUsername(), user2.getUsername(), "ciao", new Date(2013-3-12));
 		
@@ -51,7 +51,7 @@ public class RecordMessageDaoSQLTest {
 	@Test
 	public void testRM(){
 		init();
-		users.recordUser("Liquid90", "ciao", "Giacomo", "Bain", "0.0.0.2");
+		users.createUser("Liquid90", "ciao", "Giacomo", "Bain", "0.0.0.2");
 		RecordMessage mex = rec.createMessage("Je", "Liquid90", "ciao", new Date(2013-3-12));
 		assertTrue("errore nella cancellazione", rec.removeMessage(mex));
 	}
