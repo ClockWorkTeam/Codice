@@ -16,6 +16,10 @@
 */
 
 package server.dao;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
+
 import server.shared.*;
 
 public class UserDaoSQL implements UserDao{
@@ -37,13 +41,24 @@ public class UserDaoSQL implements UserDao{
 	 * @return l'oggetto User se l'operazione ha buon fine, altrimenti null
 	 */     
 	public User createUser(String username, String password, String name, String surname, String IP){
-		 User user = new User(username, name, surname, IP); 
-		 if(users.addUser(user)){
-			 if(!connection.executeUpdate("INSERT INTO UserDataSQL VALUES ('"+username+"','"+password+"','"+name+"','"+surname+"','"+IP+"');")){ 
-				 users.removeUser(user.getUsername());
-				 user=null;
+		 User user = new User(username, name, surname, IP);
+		 ResultSet rs =connection.select("UserDataSQL", "*", "username='"+username+"')", "");
+		 if(users.addUser(user)){ //se non è già presente			 
+			 if(rs==null){ //se effettivamente non si trova nel db
+				 connection.executeUpdate("INSERT INTO UserDataSQL VALUES ('"+username+"','"+password+"','"+name+"','"+surname+"','"+IP+"');"); 
+			 }else{ //nel db esiste già
+				users.removeUser(user.getUsername());
+				try {
+					users.addUser(new User(rs.getString("username"), rs.getString("name"),rs.getString("surname"), rs.getString("IP")));
+				}catch (SQLException e){}
+				user=null;
 			 }
-		 }else{user=null;}
+		 }else{//è presente nella lista
+			 if(rs==null){ //ma non si trova nel db
+				 connection.executeUpdate("INSERT INTO UserDataSQL VALUES ('"+username+"','"+password+"','"+name+"','"+surname+"','"+IP+"');");
+			 }
+			 user=null;
+		 }
 	     return user;
 	}
 	    
@@ -97,5 +112,15 @@ public class UserDaoSQL implements UserDao{
     		user.setSurname(surname);
     	}
 		return done;
+	}
+
+	public User getUser(String username){
+		return users.getUser(username);
+	}
+	/**Metodo che restituisce tutti i contatti presenti nel db
+	 * @return vector<User>
+	 */
+	public Vector<User> getAllUsers(){
+		return users.getAllUsers();
 	}
 }

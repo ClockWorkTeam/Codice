@@ -16,6 +16,8 @@
 */ 
 
 package server.dao;
+import java.util.Vector;
+
 import server.shared.*;
 
 
@@ -57,5 +59,11 @@ public interface UserDao{
    * @return boolean che indica se l'operazione e' andata o meno a buon fine
    */   
 	public boolean setSurname(String username, String surname);
+
+	public User getUser(String username);
+	/**Metodo che restituisce tutti i contatti presenti nel db
+	 * @return vector<User>
+	 */
+	public Vector<User> getAllUsers();
 
 }

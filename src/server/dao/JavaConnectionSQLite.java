@@ -23,7 +23,7 @@ public class JavaConnectionSQLite {
    private Connection connection;
    private Statement statement;
 
-/*Costruzione connessione al database
+/**Costruzione connessione al database
  * @parametro database: URI del database di riferimento
  */
    public JavaConnectionSQLite(){
@@ -37,7 +37,7 @@ public class JavaConnectionSQLite {
       catch(ClassNotFoundException e){System.out.println("Impossibile creare la connessione al database");}
    }
 
-/*Distruzione della classe JavaConnectionSQLite
+/**Distruzione della classe JavaConnectionSQLite
  *cerca di rilasciare la connessione al database quando l'oggetto viene distrutto,
  *nel caso non ci riuscisse, lancia un errore.
  */

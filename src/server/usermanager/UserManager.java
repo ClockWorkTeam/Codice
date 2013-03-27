@@ -17,6 +17,7 @@
 
 package server.usermanager;
 import java.util.Date;
+import java.util.Vector;
 
 import server.dao.*;
 import server.shared.*;
@@ -65,17 +66,20 @@ public class UserManager{
 		return userDao.setSurname(user.getSurname(), surname);
 	}
 
-	public boolean createMessage(String sender, String addressee, String path, Date date){
-		RecordMessage rm= messageDao.createMessage(sender, addressee, path, date);
-		if(rm!=null){
-			//functionmanager notificare la cosa al client
-			return true;
-		}
-		return false;
+	public RecordMessage createMessage(String sender, String addressee, String path, Date date){
+		return messageDao.createMessage(sender, addressee, path, date);
 	}
   
   public boolean removeMessage(RecordMessage message){
 	return messageDao.removeMessage(message);
   }
   
+  public User getUser(String username){
+	  return userDao.getUser(username);
+  }
+  public Vector<User> getAllContacts(User user){
+	  Vector<User> contacts = userDao.getAllUsers();
+	  contacts.remove(user);
+	  return contacts;
+  }
 }
