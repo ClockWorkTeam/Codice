@@ -1,6 +1,7 @@
 package server.transfer;
 
 
+import java.io.UnsupportedEncodingException;
 import java.util.regex.Pattern;
 
 import org.jwebsocket.api.WebSocketPacket;
@@ -31,6 +32,31 @@ public class AuthenticationListener implements WebSocketServerTokenListener {
     }
 
     public void processToken(WebSocketServerTokenEvent event, Token token) {
+   		String type= token.getString("type");
+   		WebSocketPacket wspacket=null;
+	    
+   		if(type.equals("Login")){
+   			User user=authenticationManager.login(token.getString("username"),token.getString("password"),event.getConnector().getRemoteHost().toString());
+   			if(user==null){
+   				wspacket = new RawPacket("{\"risposta\":\"false\",\"name\":\"\",\"surname\":\"\"}");
+   			}else{
+   				wspacket = new RawPacket("{\"risposta\":\"true\", \"name\":\""+user.getName()+"\", \"surname\":\""+user.getSurname()+"\"}");		
+   			}
+   		}
+   		else if(type.equals("SignUp")){
+   			User user = authenticationManager.createUser(token.getString("username"),token.getString("password"), token.getString("name"), token.getString("surname"), event.getConnector().getRemoteHost().toString());
+   			if(user==null){
+   				wspacket = new RawPacket("{\"risposta\":\"false\"}");
+   			}else{
+   				wspacket = new RawPacket("{\"risposta\":\"true\"}");
+   			}   		   
+   		}
+   		
+   		else if(type.equals("getContacts")){
+   			ContactsManager contacts= new ContactsManager();
+   			wspacket = new RawPacket(contacts.getAllContacts(userManager.getAllContacts(userManager.getUser(token.getString("username")))));
+   		}
+  		sendPacket(wspacket, event);
     }
 
     public void processClosed(WebSocketServerEvent arg0) {
@@ -46,29 +72,5 @@ public class AuthenticationListener implements WebSocketServerTokenListener {
     }
 
     public void processPacket(WebSocketServerEvent event, WebSocketPacket packet) {      
-       Pattern pattern =Pattern.compile("[\\:\\,\\}\\{\"]");
-       String[] dati=packet.getString().split(pattern.toString());
-       WebSocketPacket wspacket=null;
-       if(dati[0].equals("Login")){
-    	   User user=authenticationManager.login(dati[5],dati[11],event.getConnector().getRemoteHost().toString());
-    		if(user==null){
-    				wspacket = new RawPacket("{\"risposta\":\"false\",\"name\":\"\",\"surname\":\"\"}");
-    		}else{
-    				wspacket = new RawPacket("{\"risposta\":\"true\", \"name\":\""+user.getName()+"\", \"surname\":\""+user.getSurname()+"\"}");		
-            }
-       }
-       else if(dati[0].equals("getContacts")){
-    	  ContactsManager contacts= new ContactsManager();
-		  wspacket = new RawPacket(contacts.getAllContacts(userManager.getAllContacts(userManager.getUser(dati[5]))));
-       }
-       else if(dati[0].equals("SignUp")){
-    	   User user = authenticationManager.createUser(dati[5], dati[11], dati[17], dati[23], event.getConnector().getRemoteHost().toString());
-    	   if(user==null){
-				wspacket = new RawPacket("{\"risposta\":\"false\"}");
-    	   }else{
-				wspacket = new RawPacket("{\"risposta\":\"true\"}");
-    	   }   		   
-       }
-	   sendPacket(wspacket, event);
-    }
+     }
 }
