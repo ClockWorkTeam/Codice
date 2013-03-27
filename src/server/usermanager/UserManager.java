@@ -34,7 +34,7 @@ public class UserManager{
   /** Costruttore con parametri della classe UserDataManager
    * @param access riferimento alla classe che implementa l'interfaccia DAOLogin
    */
-  public UserManager(UserDao userDao, RecordMessageDao messageDao){
+  public void init(UserDao userDao, RecordMessageDao messageDao){
 		this.userDao = userDao;
 		this.messageDao=messageDao;
   }

@@ -27,8 +27,8 @@ public class Launcher {
 	private LoginDao loginDao;
 	private UserDao userDao;
 	private RecordMessageDao recordMessageDao;
-	private static AuthenticationManager authenticationManager;
-	private static UserManager userManager;
+	private static AuthenticationManager authenticationManager=new AuthenticationManager();
+	private static UserManager userManager= new UserManager();
 	
 	private static Launcher launcher=null;
 	
@@ -41,8 +41,8 @@ public class Launcher {
 		this.loginDao=new LoginDaoSQL(javaconnectionSQLite, userList);
 		this.userDao=new UserDaoSQL(javaconnectionSQLite, userList);
 		this.recordMessageDao= new RecordMessageDaoSQL(javaconnectionSQLite, userList);
-		this.authenticationManager= new AuthenticationManager(recordMessageDao, loginDao, userDao);
-		this.userManager=new UserManager(userDao, recordMessageDao);
+		authenticationManager.init(recordMessageDao, loginDao, userDao);
+		userManager.init(userDao, recordMessageDao);
 	}
 	
 	public static UserManager getUserMenager(){

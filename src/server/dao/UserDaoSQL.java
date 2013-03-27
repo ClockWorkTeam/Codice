@@ -42,22 +42,20 @@ public class UserDaoSQL implements UserDao{
 	 */     
 	public User createUser(String username, String password, String name, String surname, String IP){
 		 User user = new User(username, name, surname, IP);
-		 ResultSet rs =connection.select("UserDataSQL", "*", "username='"+username+"')", "");
-		 if(users.addUser(user)){ //se non è già presente			 
-			 if(rs==null){ //se effettivamente non si trova nel db
-				 connection.executeUpdate("INSERT INTO UserDataSQL VALUES ('"+username+"','"+password+"','"+name+"','"+surname+"','"+IP+"');"); 
-			 }else{ //nel db esiste già
-				users.removeUser(user.getUsername());
-				try {
-					users.addUser(new User(rs.getString("username"), rs.getString("name"),rs.getString("surname"), rs.getString("IP")));
-				}catch (SQLException e){}
-				user=null;
-			 }
-		 }else{//è presente nella lista
-			 if(rs==null){ //ma non si trova nel db
+		 ResultSet rs =connection.select("UserDataSQL", "*", "username='"+username+"'", "");
+		 try{
+			 System.out.println(rs.getString("name"));
+			 rs.getString("name"); //presente nel DB
+			 if(users.getUser(username)==null){ //ma non nella lista
+				 users.addUser(new User(rs.getString("username"), rs.getString("name"),rs.getString("surname"), rs.getString("IP")));
+				 user=null;
+			 }			 
+		 }catch(SQLException e){//non presente nel db
+			 User user2=users.getUser(username);
+			 if(user2==null){//non presente nella lista
 				 connection.executeUpdate("INSERT INTO UserDataSQL VALUES ('"+username+"','"+password+"','"+name+"','"+surname+"','"+IP+"');");
+				 if(users.addUser(user)){System.out.println(users.getAllUsers().size());}else{System.out.println("xk???");}
 			 }
-			 user=null;
 		 }
 	     return user;
 	}

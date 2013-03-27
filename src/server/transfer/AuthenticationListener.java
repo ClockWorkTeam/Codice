@@ -1,9 +1,6 @@
 package server.transfer;
 
 
-import java.io.UnsupportedEncodingException;
-import java.util.regex.Pattern;
-
 import org.jwebsocket.api.WebSocketPacket;
 import org.jwebsocket.kit.RawPacket;
 import org.jwebsocket.kit.WebSocketServerEvent;
@@ -51,7 +48,6 @@ public class AuthenticationListener implements WebSocketServerTokenListener {
    				wspacket = new RawPacket("{\"risposta\":\"true\"}");
    			}   		   
    		}
-   		
    		else if(type.equals("getContacts")){
    			ContactsManager contacts= new ContactsManager();
    			wspacket = new RawPacket(contacts.getAllContacts(userManager.getAllContacts(userManager.getUser(token.getString("username")))));

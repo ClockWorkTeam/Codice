@@ -13,13 +13,13 @@ public class ContactsManager {
 	*  } 
 	*/
 	public String getAllContacts(Vector<User> users){
-		String contacts="{ size: "+users.size()+",";
+		String contacts="{\"size\": \""+users.size()+"\"";
 		for(int i=0; i<users.size(); i++){
-			contacts+=" contact"+i+
-				": { username: "+users.get(i).getUsername()+
-				", name: "+users.get(i).getName()+
-				", surname: "+users.get(i).getSurname()+
-				", IP: "+users.get(i).getIP()+" }";
+			contacts+=", \"contact"+i+
+				"\": \"{ \"username\": \""+users.get(i).getUsername()+
+				"\", \"name\": \""+users.get(i).getName()+
+				"\", \"surname\": \""+users.get(i).getSurname()+
+				"\", \"IP\": \""+users.get(i).getIP()+"\" }\"";
 		}
 		contacts+="}";
 		return contacts;
