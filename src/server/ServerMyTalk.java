@@ -4,7 +4,7 @@ import org.jwebsocket.config.JWebSocketConfig;
 import org.jwebsocket.factory.JWebSocketFactory;
 import org.jwebsocket.server.TokenServer;
 
-import server.transfer.AuthenticationListener;
+import server.transfer.AuthenticationTransfer;
 public class ServerMyTalk {
     private TokenServer tokenServer;
 
@@ -24,7 +24,7 @@ public class ServerMyTalk {
             	Launcher.getServer();
                 System.out.println("server was found");
                                 
-                AuthenticationListener myTalkListener =new AuthenticationListener(Launcher.getAuthenticationManager(), Launcher.getUserMenager());  
+                AuthenticationTransfer myTalkListener =new AuthenticationTransfer(Launcher.getAuthenticationManager(), Launcher.getUserMenager());  
                 tokenServer.addListener(myTalkListener);
                 myTalkListener.setTokenServer(this);
                 

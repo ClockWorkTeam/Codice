@@ -18,13 +18,13 @@ import server.usermanager.*;
 import server.functionmanager.ContactsManager;
 import server.shared.User;
 
-public class AuthenticationListener implements WebSocketServerTokenListener {
+public class AuthenticationTransfer implements WebSocketServerTokenListener {
 	TokenServer tokenServer;
 	private AuthenticationManager authenticationManager;
 	private UserManager userManager;
 	private Collection<WebSocketConnector> mClients;
 	
-	public AuthenticationListener(AuthenticationManager authenticationManager, UserManager userManager){
+	public AuthenticationTransfer(AuthenticationManager authenticationManager, UserManager userManager){
 		this.authenticationManager=authenticationManager;
 		this.userManager=userManager;
 		mClients = new FastList<WebSocketConnector>().shared();
