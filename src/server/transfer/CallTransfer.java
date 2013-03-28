@@ -28,12 +28,26 @@ public class CallTransfer implements WebSocketServerTokenListener {
     public void processToken(WebSocketServerTokenEvent event, Token token) {
    		String type= token.getString("type");
   		WebSocketPacket wspacket=null;
+  		Collection<WebSocketConnector> clients=authentication.getClients();
    		if(type.equals("call")){
-   			Collection<WebSocketConnector> clients=authentication.getClients();
+  		  	for (WebSocketConnector connector : clients) {
+   	    		if(connector.getRemoteHost().toString().equals(token.getString("ip"))){
+   	    			wspacket=new RawPacket("{\"type\":\"call\", \"ip\":\""+event.getConnector().getRemoteHost()+"\",\"typecall\":\""+token.getString("calltype")+"\"}");
+   	    			sendPacket(wspacket,connector);
+   	    		}
+   	    	}
+   		}else if(type.equals("answeredcall")){
    		  	for (WebSocketConnector connector : clients) {
    	    		if(connector.getRemoteHost().toString().equals(token.getString("ip"))){
-   	    			wspacket=new RawPacket("{\"type\":\"call\", \"ip\":\""+event.getConnector().getRemoteHost()+"\",\"typecall\":\""+token.getString("typecall")+"\"}");
-   	    			System.out.println(wspacket.getString());
+   	    			wspacket=new RawPacket("{\"type\":\"answeredCall\", \"response\":\"true\"}");
+   	    			sendPacket(wspacket,connector);
+   	    		}
+   	    	}
+   			
+   		}else if(type.equals("offer")){
+   			for (WebSocketConnector connector : clients) {
+   	    		if(connector.getRemoteHost().toString().equals(token.getString("ip"))){
+   	    			wspacket=new RawPacket(token.getString("description"));
    	    			sendPacket(wspacket,connector);
    	    		}
    	    	}
