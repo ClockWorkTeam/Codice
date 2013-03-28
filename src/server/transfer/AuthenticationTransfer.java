@@ -18,13 +18,13 @@ import server.usermanager.*;
 import server.functionmanager.ContactsManager;
 import server.shared.User;
 
-public class AuthenticationListener implements WebSocketServerTokenListener {
+public class AuthenticationTransfer implements WebSocketServerTokenListener {
 	TokenServer tokenServer;
 	private AuthenticationManager authenticationManager;
 	private UserManager userManager;
 	private Collection<WebSocketConnector> mClients;
 	
-	public AuthenticationListener(AuthenticationManager authenticationManager, UserManager userManager){
+	public AuthenticationTransfer(AuthenticationManager authenticationManager, UserManager userManager){
 		this.authenticationManager=authenticationManager;
 		this.userManager=userManager;
 		mClients = new FastList<WebSocketConnector>().shared();
@@ -45,7 +45,8 @@ public class AuthenticationListener implements WebSocketServerTokenListener {
    				wspacket = new RawPacket("{\"risposta\":\"true\", \"name\":\""+user.getName()+"\", \"surname\":\""+user.getSurname()+"\"}");
    				WebSocketPacket wspacket2=new RawPacket("{\"size\":\""+1+"\", \"username0\":\""+user.getUsername()+"\",\"name0\":\""+user.getName()+"\",\"surname0\":\""+user.getSurname()+"\",\"IP0\":\""+user.getIP()+"\"}");
   				broadcastToAll(wspacket2);
-    			}
+    		}
+   	  		sendPacket(wspacket, event);
    		}
    		else if(type.equals("SignUp")){
    			User user = authenticationManager.createUser(token.getString("username"),token.getString("password"), token.getString("name"), token.getString("surname"), event.getConnector().getRemoteHost().toString());
@@ -55,14 +56,28 @@ public class AuthenticationListener implements WebSocketServerTokenListener {
    				wspacket = new RawPacket("{\"risposta\":\"true\"}");
    				WebSocketPacket wspacket2=new RawPacket("{\"size\":\""+1+"\", \"username0\":\""+user.getUsername()+"\",\"name0\":\""+user.getName()+"\",\"surname0\":\""+user.getSurname()+"\",\"IP0\":\""+user.getIP()+"\"}");
   				broadcastToAll(wspacket2);
-   			}   		   
+   			}
+   	  		sendPacket(wspacket, event);
    		}
    		else if(type.equals("getContacts")){
    	    	mClients.add(event.getConnector());
    			ContactsManager contacts= new ContactsManager();
    			wspacket = new RawPacket(contacts.getAllContacts(userManager.getAllContacts(userManager.getUser(token.getString("username")))));
+   	  		sendPacket(wspacket, event);
    		}
-  		sendPacket(wspacket, event);
+   		else if(type.equals("Logout")){
+   			boolean ris = authenticationManager.logout(userManager.getUser(token.getString("username")));
+   			if(!ris){
+   				wspacket = new RawPacket("{\"risposta\":\"false\"}");
+   			}else{
+   				User user=userManager.getUser(token.getString("username"));
+   				wspacket = new RawPacket("{\"risposta\":\"true\"}");
+   				WebSocketPacket wspacket2=new RawPacket("{\"size\":\""+1+"\", \"username0\":\""+user.getUsername()+"\",\"name0\":\""+user.getName()+"\",\"surname0\":\""+user.getSurname()+"\",\"IP0\":\""+user.getIP()+"\"}");
+  				broadcastToAll(wspacket2);
+   			}   		   
+   	  		sendPacket(wspacket, event);
+   		}
+
     }
 
     public void processClosed(WebSocketServerEvent event) {
@@ -81,6 +96,9 @@ public class AuthenticationListener implements WebSocketServerTokenListener {
     	}
     }
 
-    public void processPacket(WebSocketServerEvent event, WebSocketPacket packet) {      
-     }
+    public void processPacket(WebSocketServerEvent event, WebSocketPacket packet) {           
+    }
+    public Collection<WebSocketConnector> getClients(){
+    	return mClients;
+    }
 }
