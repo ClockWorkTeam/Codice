@@ -48,13 +48,12 @@ public class UserDaoSQL implements UserDao{
 			 rs.getString("name"); //presente nel DB
 			 if(users.getUser(username)==null){ //ma non nella lista
 				 users.addUser(new User(rs.getString("username"), rs.getString("name"),rs.getString("surname"), rs.getString("IP")));
-				 user=null;
-			 }			 
+			 }
+			 user=null;
 		 }catch(SQLException e){//non presente nel db
 			 User user2=users.getUser(username);
 			 if(user2==null){//non presente nella lista
 				 connection.executeUpdate("INSERT INTO UserDataSQL VALUES ('"+username+"','"+password+"','"+name+"','"+surname+"','"+IP+"');");
-				 if(users.addUser(user)){System.out.println(users.getAllUsers().size());}else{System.out.println("xk???");}
 			 }
 		 }
 	     return user;
