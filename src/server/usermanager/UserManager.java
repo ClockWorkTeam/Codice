@@ -78,7 +78,7 @@ public class UserManager{
 	  return userDao.getUser(username);
   }
   public Vector<User> getAllContacts(User user){
-	  Vector<User> contacts = userDao.getAllUsers();
+	  Vector<User> contacts = new Vector<User>(userDao.getAllUsers());
 	  contacts.remove(user);
 	  return contacts;
   }
