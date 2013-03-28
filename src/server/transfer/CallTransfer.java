@@ -2,12 +2,8 @@ package server.transfer;
 
 
 import java.util.Collection;
-import java.util.Map;
-
 import org.jwebsocket.api.WebSocketConnector;
 import org.jwebsocket.api.WebSocketPacket;
-import org.jwebsocket.config.JWebSocketConfig;
-import org.jwebsocket.factory.JWebSocketFactory;
 import org.jwebsocket.kit.RawPacket;
 import org.jwebsocket.kit.WebSocketServerEvent;
 import org.jwebsocket.listener.WebSocketServerTokenEvent;
@@ -20,19 +16,27 @@ import server.ServerMyTalk;
 
 public class CallTransfer implements WebSocketServerTokenListener {
 	TokenServer tokenServer;
-	
+    private AuthenticationTransfer authentication;
+
+    public CallTransfer(AuthenticationTransfer authentication){
+    	this.authentication=authentication;
+    }
     public void setTokenServer(ServerMyTalk server) {
         tokenServer=server.getTokenServer();
     }
 
     public void processToken(WebSocketServerTokenEvent event, Token token) {
    		String type= token.getString("type");
-   		WebSocketPacket wspacket=null;
-  		System.out.println("� arrivato un messaggio" + token.toString());
-   		if(type.equals("call"))
-   		{
-   			wspacket=new RawPacket(token.toString());
-   			sendPacket(wspacket, event);
+  		WebSocketPacket wspacket=null;
+   		if(type.equals("call")){
+   			Collection<WebSocketConnector> clients=authentication.getClients();
+   		  	for (WebSocketConnector connector : clients) {
+   	    		if(connector.getRemoteHost().toString().equals(token.getString("ip"))){
+   	    			wspacket=new RawPacket("{\"type\":\"call\", \"ip\":\""+event.getConnector().getRemoteHost()+"\",\"typecall\":\""+token.getString("typecall")+"\"}");
+   	    			System.out.println(wspacket.getString());
+   	    			sendPacket(wspacket,connector);
+   	    		}
+   	    	}
    		}
   		
     }
@@ -45,8 +49,8 @@ public class CallTransfer implements WebSocketServerTokenListener {
                 + "' connected.*********");
     }
 
-    public void sendPacket(WebSocketPacket packet, WebSocketServerEvent event){
-		event.sendPacket(packet); 
+    public void sendPacket(WebSocketPacket packet, WebSocketConnector connector){
+    	tokenServer.sendPacket(connector, packet); 
     }
     public void processPacket(WebSocketServerEvent event, WebSocketPacket packet) {      
     }

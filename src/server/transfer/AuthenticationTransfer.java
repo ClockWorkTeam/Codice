@@ -96,6 +96,9 @@ public class AuthenticationTransfer implements WebSocketServerTokenListener {
     	}
     }
 
-    public void processPacket(WebSocketServerEvent event, WebSocketPacket packet) {      
-     }
+    public void processPacket(WebSocketServerEvent event, WebSocketPacket packet) {           
+    }
+    public Collection<WebSocketConnector> getClients(){
+    	return mClients;
+    }
 }

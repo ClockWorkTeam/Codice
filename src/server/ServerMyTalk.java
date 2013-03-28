@@ -8,7 +8,7 @@ import server.transfer.AuthenticationTransfer;
 import server.transfer.CallTransfer;
 public class ServerMyTalk {
     private TokenServer tokenServer;
-
+    
     public TokenServer getTokenServer() {
         return tokenServer;
     }
@@ -24,9 +24,11 @@ public class ServerMyTalk {
             if (tokenServer != null) {
             	Launcher.getServer();
                 System.out.println("server was found");
+                AuthenticationTransfer authentication;
+                CallTransfer call;
                                 
-                AuthenticationTransfer authentication =new AuthenticationTransfer(Launcher.getAuthenticationManager(), Launcher.getUserMenager());
-                CallTransfer call=new CallTransfer();
+                authentication =new AuthenticationTransfer(Launcher.getAuthenticationManager(), Launcher.getUserMenager());
+                call=new CallTransfer(authentication);
                 tokenServer.addListener(authentication);
                 tokenServer.addListener(call);
                 authentication.setTokenServer(this);
