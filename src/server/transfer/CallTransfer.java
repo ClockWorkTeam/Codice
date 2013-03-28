@@ -18,7 +18,7 @@ import org.jwebsocket.token.Token;
 import server.ServerMyTalk;
 
 
-public class CallListener implements WebSocketServerTokenListener {
+public class CallTransfer implements WebSocketServerTokenListener {
 	TokenServer tokenServer;
 	
     public void setTokenServer(ServerMyTalk server) {
@@ -28,7 +28,7 @@ public class CallListener implements WebSocketServerTokenListener {
     public void processToken(WebSocketServerTokenEvent event, Token token) {
    		String type= token.getString("type");
    		WebSocketPacket wspacket=null;
-  		System.out.println("è arrivato un messaggio" + token.toString());
+  		System.out.println("ï¿½ arrivato un messaggio" + token.toString());
    		if(type.equals("call"))
    		{
    			wspacket=new RawPacket(token.toString());

@@ -5,6 +5,7 @@ import org.jwebsocket.factory.JWebSocketFactory;
 import org.jwebsocket.server.TokenServer;
 
 import server.transfer.AuthenticationTransfer;
+import server.transfer.CallTransfer;
 public class ServerMyTalk {
     private TokenServer tokenServer;
 
@@ -24,10 +25,12 @@ public class ServerMyTalk {
             	Launcher.getServer();
                 System.out.println("server was found");
                                 
-                AuthenticationTransfer myTalkListener =new AuthenticationTransfer(Launcher.getAuthenticationManager(), Launcher.getUserMenager());  
-                tokenServer.addListener(myTalkListener);
-                myTalkListener.setTokenServer(this);
-                
+                AuthenticationTransfer authentication =new AuthenticationTransfer(Launcher.getAuthenticationManager(), Launcher.getUserMenager());
+                CallTransfer call=new CallTransfer();
+                tokenServer.addListener(authentication);
+                tokenServer.addListener(call);
+                authentication.setTokenServer(this);
+                call.setTokenServer(this);
             } else {
                 System.out.println("server was NOT found");
             }
