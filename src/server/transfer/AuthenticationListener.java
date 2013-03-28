@@ -1,6 +1,10 @@
 package server.transfer;
 
 
+import java.util.Collection;
+import javolution.util.FastList;
+
+import org.jwebsocket.api.WebSocketConnector;
 import org.jwebsocket.api.WebSocketPacket;
 import org.jwebsocket.kit.RawPacket;
 import org.jwebsocket.kit.WebSocketServerEvent;
@@ -18,10 +22,12 @@ public class AuthenticationListener implements WebSocketServerTokenListener {
 	TokenServer tokenServer;
 	private AuthenticationManager authenticationManager;
 	private UserManager userManager;
+	private Collection<WebSocketConnector> mClients;
 	
 	public AuthenticationListener(AuthenticationManager authenticationManager, UserManager userManager){
 		this.authenticationManager=authenticationManager;
 		this.userManager=userManager;
+		mClients = new FastList<WebSocketConnector>().shared();
 	}
 	
     public void setTokenServer(ServerMyTalk server) {
@@ -33,40 +39,46 @@ public class AuthenticationListener implements WebSocketServerTokenListener {
    		WebSocketPacket wspacket=null;	    
    		if(type.equals("Login")){
    			User user=authenticationManager.login(token.getString("username"),token.getString("password"),event.getConnector().getRemoteHost().toString());
-
    			if(user==null){
    				wspacket = new RawPacket("{\"risposta\":\"false\",\"name\":\"\",\"surname\":\"\"}");
    			}else{
-   				wspacket = new RawPacket("{\"risposta\":\"true\", \"name\":\""+user.getName()+"\", \"surname\":\""+user.getSurname()+"\"}");		
-   			}
+   				wspacket = new RawPacket("{\"risposta\":\"true\", \"name\":\""+user.getName()+"\", \"surname\":\""+user.getSurname()+"\"}");
+   				WebSocketPacket wspacket2=new RawPacket("{\"size\":\""+1+"\", \"username0\":\""+user.getUsername()+"\",\"name0\":\""+user.getName()+"\",\"surname0\":\""+user.getSurname()+"\",\"IP0\":\""+user.getIP()+"\"}");
+  				broadcastToAll(wspacket2);
+    			}
    		}
    		else if(type.equals("SignUp")){
    			User user = authenticationManager.createUser(token.getString("username"),token.getString("password"), token.getString("name"), token.getString("surname"), event.getConnector().getRemoteHost().toString());
-
    			if(user==null){
    				wspacket = new RawPacket("{\"risposta\":\"false\"}");
    			}else{
    				wspacket = new RawPacket("{\"risposta\":\"true\"}");
+   				WebSocketPacket wspacket2=new RawPacket("{\"size\":\""+1+"\", \"username0\":\""+user.getUsername()+"\",\"name0\":\""+user.getName()+"\",\"surname0\":\""+user.getSurname()+"\",\"IP0\":\""+user.getIP()+"\"}");
+  				broadcastToAll(wspacket2);
    			}   		   
    		}
    		else if(type.equals("getContacts")){
+   	    	mClients.add(event.getConnector());
    			ContactsManager contacts= new ContactsManager();
    			wspacket = new RawPacket(contacts.getAllContacts(userManager.getAllContacts(userManager.getUser(token.getString("username")))));
-   			System.out.println(wspacket.getString());
    		}
   		sendPacket(wspacket, event);
     }
 
-    public void processClosed(WebSocketServerEvent arg0) {
+    public void processClosed(WebSocketServerEvent event) {
+    	mClients.remove(event.getConnector());
     }
 
     public void processOpened(WebSocketServerEvent event) {
-        System.out.println("***********Client '" + event.getSessionId()
-                + "' connected.*********");
     }
 
     public void sendPacket(WebSocketPacket packet, WebSocketServerEvent event){
 		event.sendPacket(packet); 
+    }
+    public void broadcastToAll(WebSocketPacket packet) {
+    	for (WebSocketConnector lConnector : mClients) {
+    		tokenServer.sendPacket(lConnector, packet);
+    	}
     }
 
     public void processPacket(WebSocketServerEvent event, WebSocketPacket packet) {      
