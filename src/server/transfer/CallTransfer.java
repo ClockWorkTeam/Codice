@@ -29,6 +29,7 @@ public class CallTransfer implements WebSocketServerTokenListener {
    		String type= token.getString("type");
   		WebSocketPacket wspacket=null;
   		Collection<WebSocketConnector> clients=authentication.getClients();
+  		System.out.println("Numero clienti" + clients.size());
    		if(type.equals("call")){
   		  	for (WebSocketConnector connector : clients) {
    	    		if(connector.getRemoteHost().toString().equals(token.getString("ip"))){
@@ -45,9 +46,17 @@ public class CallTransfer implements WebSocketServerTokenListener {
    	    	}
    			
    		}else if(type.equals("offer")){
-   			for (WebSocketConnector connector : clients) {
+   			for (WebSocketConnector connector : clients) {   				
    	    		if(connector.getRemoteHost().toString().equals(token.getString("ip"))){
    	    			wspacket=new RawPacket(token.getString("description"));
+   	    			sendPacket(wspacket,connector);
+   	    		}
+   	    	}
+   		} else if(type.equals("candidate")){
+   			for (WebSocketConnector connector : clients) {
+   				System.out.println("fino a qui ok");
+   	    		if(connector.getRemoteHost().toString().equals(token.getString("ip"))){
+   	    			wspacket=new RawPacket(token.getString("cand"));
    	    			sendPacket(wspacket,connector);
    	    		}
    	    	}
@@ -66,6 +75,7 @@ public class CallTransfer implements WebSocketServerTokenListener {
     public void sendPacket(WebSocketPacket packet, WebSocketConnector connector){
     	tokenServer.sendPacket(connector, packet); 
     }
-    public void processPacket(WebSocketServerEvent event, WebSocketPacket packet) {      
+    public void processPacket(WebSocketServerEvent event, WebSocketPacket packet) {    
+    	
     }
 }
